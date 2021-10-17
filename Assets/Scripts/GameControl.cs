@@ -11,6 +11,8 @@ public class GameControl : MonoBehaviour
     //[SerializeField] GameObject[] fishPool;
     private Dictionary<int, FishController> fishDic;
     public static int TargetFishId { get; private set; }
+    private int totalHealth = 3;
+    private int currentHealth;
     //private int maxFishId;
     private void Awake()
     {
@@ -40,8 +42,15 @@ public class GameControl : MonoBehaviour
         }
         else
         {
-            player.IsGameOver = true;
-            ScoreManager.Instance.ToggleGameOver(true);
+            --currentHealth;
+            ScoreManager.Instance.UpdateHealth(currentHealth);
+            if (currentHealth < 1)
+            {
+                player.IsGameOver = true;
+                ScoreManager.Instance.ToggleGameOver(true);
+
+            }
+
         }
     }
 
@@ -50,6 +59,7 @@ public class GameControl : MonoBehaviour
     {
         FormFishDic(SpwanFish.Instance.fishTank);
         GenerateTargetId();
+        currentHealth = totalHealth;
     }
     void FormFishDic(GameObject[] pool)
     {
@@ -81,6 +91,7 @@ public class GameControl : MonoBehaviour
         GenerateTargetId();
         ScoreManager.Instance.ToggleGameOver(false);
         player.IsGameOver = false;
+        currentHealth = totalHealth;
     }
     public void QuitGame()
     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using DG.Tweening;
 public class ScoreManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI score;
@@ -10,6 +11,7 @@ public class ScoreManager : MonoBehaviour
     static int playerScore;
     public static ScoreManager Instance;
     [SerializeField] GameObject gameoverPanel;
+    [SerializeField] GameObject[] healthIcons;
     private void Awake()
     {
         if (Instance == null)
@@ -37,11 +39,21 @@ public class ScoreManager : MonoBehaviour
     {
         targetFish.sprite = sprite;
     }
+    public void UpdateHealth(int healthLeft)
+    {
+        healthIcons[healthLeft].transform.DOScale(Vector3.zero, .5f);
+    }
 
     public void ToggleGameOver(bool enable)
     {
         if (!enable)
+        {
             UpdateScore(0);
+            foreach (var health in healthIcons)
+            {
+                health.transform.DOScale(Vector3.one, 0.5f);
+            }
+        }
         gameoverPanel.SetActive(enable);
     }
 }
